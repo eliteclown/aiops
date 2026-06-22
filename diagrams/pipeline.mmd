@@ -1,0 +1,15 @@
+graph LR
+    subgraph input["Input"]
+        T["Preprocessed text\n(keywords boosted ×3)"]
+    end
+    subgraph vec["Stage 1 — Vectorize"]
+        V["TF-IDF Vectorizer\n(1-2 grams, 5k-10k features)\nor CountVectorizer for NB"]
+    end
+    subgraph clf["Stage 2 — Classify"]
+        C["Logistic Regression\nor Random Forest\nor LinearSVC (calibrated)\nor Multinomial NB"]
+    end
+    subgraph out["Output"]
+        P["Probability vector"]
+        L["compound_label\n'Category|Subcategory'"]
+    end
+    T --> V --> C --> P & L

@@ -1,0 +1,31 @@
+graph TD
+    subgraph Browser["User Browser"]
+        UI["Streamlit Web UI\n(app.py)"]
+    end
+    subgraph App["Streamlit Process (In-Memory)"]
+        SS["Session State"]
+        subgraph SRC["src/ package"]
+            DP["document_processor\nText Extraction"]
+            FE["feature_extractor\nPreprocessing"]
+            CL["classifier\nInsuranceClassifier"]
+            ST["storage\nJSON CRUD"]
+        end
+    end
+    subgraph Disk["Local Filesystem"]
+        JSON["data/training_data.json"]
+        MDL["models/classifier.joblib"]
+    end
+    subgraph Libs["Third-party Libraries"]
+        SKL["scikit-learn"]
+        OCR["Tesseract OCR"]
+        PDF2["pdfplumber"]
+        DOC["python-docx / openpyxl"]
+    end
+    UI <-->|HTTP localhost| App
+    DP --> PDF2
+    DP --> DOC
+    DP --> OCR
+    DP --> FE --> CL --> SKL
+    CL -->|save/load| MDL
+    ST -->|read/write| JSON
+    SS <--> UI

@@ -1,0 +1,10 @@
+flowchart LR
+    A["extract_text\n(bytes, filename)"] --> B{file\nextension}
+    B -- ".pdf" --> C["pdfplumber\n(page-by-page)"]
+    B -- ".docx/.doc" --> D["python-docx\n(paragraphs + tables)"]
+    B -- ".xlsx/.xls" --> E["openpyxl/pandas\n(all sheets)"]
+    B -- "image\n(png/jpg/tiff…)" --> F["Pillow +\nTesseract OCR"]
+    C --> G["plain text string"]
+    D --> G
+    E --> G
+    F --> G
