@@ -1,0 +1,30 @@
+flowchart TD
+    subgraph INPUT["INPUT SOURCES"]
+        A1["Labeled folder\n/docs/claims/*.pdf"]
+        A2["CSV manifest\nfilename, category, subcategory"]
+        A3["Existing JSON\ntraining_data.json"]
+    end
+
+    subgraph BATCH["BATCH INGESTION SCRIPT"]
+        B1["Read CSV / scan directories"]
+        B2["extract_text(bytes, filename)"]
+        B3["prepare_single_text(text, keywords)"]
+        B4["add_training_sample() × N\n→ append to training_data.json"]
+    end
+
+    subgraph TRAIN["SINGLE TRAINING RUN"]
+        C1["load_training_data()\n(all N samples at once)"]
+        C2["prepare_training_texts()"]
+        C3["InsuranceClassifier.train()\nfit once + cross-validate"]
+        C4["save() → classifier.joblib"]
+    end
+
+    subgraph OUT["OUTPUT"]
+        D1["Trained model ready\nfor production prediction"]
+    end
+
+    A1 --> B1
+    A2 --> B1
+    A3 --> C1
+    B1 --> B2 --> B3 --> B4 --> C1
+    C1 --> C2 --> C3 --> C4 --> D1
